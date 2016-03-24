@@ -1,0 +1,189 @@
+// layout
+$max-width: 1440px;
+$min-width: 1280px;
+
+// color
+$web-red: #e74f4d;
+$font-black: #393939;
+
+@function percentage($width) {
+	@return ($width / $min-width) * 100%;
+}
+
+body {
+	/*
+	*	In order to improve the performance of font
+	* with win10, I use 'Apple LiGothic Medium' instead of SimHei.
+	*/
+	font-family: 'Apple LiGothic Medium', 'Microsoft YaHei', SimHei;
+	margin: 0;
+}
+
+a {
+	text-decoration: none;
+	color: $font-black;
+}
+
+h1, h2, h3, h4, h5, h6, b, span, p {
+	cursor: default;
+}
+
+ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	li {
+		margin: 0;
+		padding: 0;
+		cursor: default;
+	}
+}
+
+#inner_container {
+	position: relative;
+	margin: 0 auto;
+	width: 100%;
+	min-width: $min-width;
+	max-width: $max-width;
+	z-index: 2;
+	overflow: hidden;
+	> div {
+		width: 100%;
+		overflow: hidden;
+	}
+	// background-color: hsla(0, 0, 0, 0.1);
+}
+
+#logo {
+	display: inline-block;
+	float: left;
+	padding-left: percentage(51px);
+	width: percentage(122px);
+	height: 57px;
+
+	> img {
+		padding-top: (57px-31px) / 2;
+		width: 31px;
+		height: 31px;
+	}
+	
+	> span {
+		display: inline-block;
+		position: relative;
+		top: -6px;
+		left: percentage(11px);
+		font-size: 21px;
+		cursor: pointer;
+	}
+}
+
+nav {
+	> ul {
+		float: right;
+		padding-right: percentage(50px);
+		width: percentage(552px);
+		overflow: hidden;
+
+		> li {
+			$padding-width: percentage(30px);
+			$margin-width: percentage(9px);
+
+			float: left;
+			margin-left: $margin-width;
+			margin-right: $margin-width;
+			height: 57px;
+			font-size: 14px;
+			line-height: 46px;
+			> a {
+				display: inline-block;
+				padding-left: 1em;
+				padding-right: 1em;
+				height: 57px;
+				color: #808080;
+				&:hover {
+					height: 54px;
+					color: $web-red;
+					border-bottom: 3px solid $web-red;
+				}
+				> img {
+					position: relative;
+					top: 3px;
+				}
+			}
+		}
+
+		> :first-child {
+			> a {
+				height: 54px;
+				color: $web-red;
+				border-bottom: 3px solid $web-red;
+			}
+		}
+
+		> :last-child {
+			> a {
+				color: $web-red;
+			}
+		}
+	}
+}
+
+#banner {
+	position: absolute;
+	top: 57px;
+	width: 100%;
+	height: 690px;
+	background-color: black;
+	overflow: hidden;
+	z-index: 1;
+	> img {
+		position: relative;
+		top: -2px;
+		width: 100%;
+		min-width: 1280px;
+		border: 0;
+		opacity: 0.8;
+	}
+}
+
+#place_holder_0 {
+	height: 690px;
+  > p {
+  	position: relative;
+  	margin: 0;
+  	padding-top: 207px;
+  	padding-left: percentage(116px);
+		font-family: 'Microsoft YaHei';
+		color: white;
+		> b {
+			font-weight: normal;
+			font-size: 60px;
+			line-height: 90px;
+		}
+		> span {
+			padding-left: percentage(4px);
+			font-size: 21px;
+			line-height: 34px;
+		}
+	}
+}
+
+#place_holder_1 {
+	height: 250px;
+
+}
+
+button {
+	position: relative;
+	margin-top: 60px;
+	margin-left: percentage(124px);
+	width: percentage(330px);
+	height: 63px;
+	border: 0;
+	background-color: $web-red;
+	font-size: 30px;
+	letter-spacing: 2px;
+	color: white;
+	text-align: center;
+	cursor: pointer;
+}
