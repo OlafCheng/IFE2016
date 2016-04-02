@@ -1,0 +1,464 @@
+@import "compass/utilities/sprites";
+
+$icons-spacing: 4px;
+$icons-true-position: 100%;
+@import "icons/*.png";
+
+@import "pics/*.png";
+
+
+// layout
+$max-width: 1440px;
+$min-width: 1280px;
+
+// color
+$web-red: #E74F4D;
+$brown-red: #BE4E48;
+$font-black: #393939;
+
+@function percentage($width) {
+	@return ($width / $min-width) * 100%;
+}
+
+@mixin std_banner(
+	$top: 0px,
+	$height: 300px,
+	$bg_color: #999999
+	) {
+	position: absolute;
+	top: $top;
+	width: 100%;
+	height: $height;
+	background-color: $bg_color;
+}
+
+body {
+	/*
+	*	In order to improve the performance of font
+	* with win10, I use 'Apple LiGothic Medium' instead of SimHei.
+	*/
+	font-family: SimHei, 'Apple LiGothic Medium', 'Microsoft YaHei';
+	margin: 0;
+}
+
+a {
+	text-decoration: none;
+	color: $font-black;
+}
+
+h1, h2, h3, h4, h5, h6, b, span, p {
+	cursor: default;
+}
+
+ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	li {
+		margin: 0;
+		padding: 0;
+		cursor: default;
+	}
+}
+
+#inner_container {
+	position: relative;
+	margin: 0 auto;
+	width: 100%;
+	min-width: $min-width;
+	max-width: $max-width;
+	z-index: 2;
+	overflow: hidden;
+	> div {
+		width: 100%;
+		overflow: hidden;
+	}
+	// background-color: hsla(0, 0, 0, 0.1);
+}
+
+#logo {
+	display: inline-block;
+	float: left;
+	padding-left: percentage(51px);
+	width: percentage(122px);
+	height: 57px;
+	&::before {
+		display: inline-block;
+		content: "";
+		margin-top: (57px-31px) / 2;
+		padding-right: 4px;
+		width: 31px;
+		height: 31px;
+		@include icons-sprite(book_b);
+		background-size: 31px;
+	}
+	> span {
+		display: inline-block;
+		position: relative;
+		top: -8px;
+		left: percentage(11px);
+		font-size: 21px;
+		cursor: pointer;
+	}
+}
+
+nav {
+	> ul {
+		float: right;
+		padding-right: percentage(50px);
+		width: percentage(552px);
+		overflow: hidden;
+
+		> li {
+			$padding-width: percentage(30px);
+			$margin-width: percentage(9px);
+
+			float: left;
+			margin-left: $margin-width;
+			margin-right: $margin-width;
+			height: 57px;
+			font-size: 14px;
+			line-height: 48px;
+			> a {
+				display: inline-block;
+				padding-left: 1em;
+				padding-right: 1em;
+				height: 57px;
+				color: #808080;
+				&:hover {
+					height: 54px;
+					color: $web-red;
+					border-bottom: 3px solid $web-red;
+				}
+				> img {
+					position: relative;
+					top: 3px;
+				}
+			}
+		}
+
+		> :first-child {
+			> a {
+				height: 54px;
+				color: $web-red;
+				border-bottom: 3px solid $web-red;
+			}
+		}
+
+		> :last-child {
+			> a {
+				color: $web-red;
+				&::before {
+					display: inline-block;
+					content: "";
+					position: relative;
+					top: 3px;
+					left: 3px;
+					width: 14px;
+					height: 17px;
+					@include icons-sprite(login);
+				}
+			}
+		}
+	}
+}
+
+#banner_0 {
+	position: absolute;
+	top: 57px;
+	width: 100%;
+	height: 690px;
+	background-color: black;
+	overflow: hidden;
+	z-index: 1;
+	> img {
+		position: relative;
+		top: -2px;
+		width: 100%;
+		min-width: 1280px;
+		border: 0;
+		opacity: 0.8;
+	}
+}
+
+#place_holder_0 {
+	height: 690px;
+  > p {
+  	position: relative;
+  	margin: 0;
+  	padding-top: 207px;
+  	padding-left: percentage(116px);
+		font-family: 'Microsoft YaHei';
+		color: white;
+		> b {
+			font-weight: normal;
+			font-size: 60px;
+			line-height: 90px;
+		}
+		> span {
+			padding-left: percentage(4px);
+			font-size: 21px;
+			line-height: 34px;
+		}
+	}
+}
+
+#button_0 {
+	position: relative;
+	margin-top: 60px;
+	margin-left: percentage(124px);
+	width: percentage(330px);
+	height: 63px;
+	border: 0;
+	background-color: $web-red;
+	font-size: 30px;
+	letter-spacing: 2px;
+	color: white;
+	text-align: center;
+	cursor: pointer;
+}
+
+#place_holder_1 {
+	height: 250px;
+	> ul {
+		width: 100%;
+		overflow: hidden;
+		> li {
+			float: left;
+			&::before {
+				content: "";
+				display: block;
+				margin: 46px auto 40px;
+				width: 42px;
+				height: 42px;
+				background-position:center;
+			}
+			> p {
+				height: 52px;
+				border-right: 1px solid #999999;
+				font-size: 14px;
+				line-height: 19px;
+				color: #767777;
+				text-align: center;
+			}
+		}
+		> :first-child {
+			width: percentage(323px);
+			&::before {
+				@include icons-sprite(circle);
+			}
+		}
+		> :nth-child(2) {
+			width: percentage(333px);
+			&::before {
+				@include icons-sprite(flag);
+			}
+		}
+		> :nth-child(3) {
+			width: percentage(313px);
+			&::before {
+				@include icons-sprite(flower);
+			}
+		}
+		> :last-child {
+			width: (305px);
+			&::before {
+				@include icons-sprite(square);
+			}
+			> p {
+				border: none;
+			}
+		}
+	}
+}
+
+#banner_2 {
+	@include std_banner((57px + 690px + 250px), 360px, #EDEDED);
+}
+
+#banner_3 {
+	@include std_banner((57px + 690px + 250px + 360px), 340px, #AA3433);
+	> img {
+		width: 100%;
+		opacity: 0.8;
+	}
+}
+
+#banner_4 {
+	@include std_banner((57px + 690px + 250px + 360px + 340px), 605px, #F8F8F8);
+}
+
+#place_holder_2 {
+	height: 360px;
+	&::before {
+		display: block;
+		content: "";
+		margin: 90px auto 43px;
+		width: 91px;
+		height: 92px;
+		@include icons-sprite(book_b);
+	}
+	> p {
+		margin: 0;
+		font-family: 'SimHei';
+		font-size: 53.6px;
+		text-align: center;
+		color: #A1A1A1;
+	}
+}
+
+#place_holder_3 {
+	position: relative;
+	height: 340px;
+	font-family: "Microsoft Yahei";
+	overflow: visible !important;
+	z-index: 2;
+	> :first-child {
+		margin-top: 50px;
+		margin-bottom: 11px;
+		font-size: 21px;
+		color: white;
+		text-align: center;
+	}
+	> :nth-child(3) {
+		margin-top: 12px;
+		margin-bottom: 50px;
+		color: white;
+		font-size: 12px;
+		text-align: center;
+	}
+}
+form[name="location"] {
+	position: relative;
+	display: block;
+	margin: 0 auto;
+	padding-top: 1px;
+	width: 1028px;
+	z-index: 1;
+	overflow: hidden;
+	> :last-child {
+		margin-right: 0;
+	}
+}
+
+.imitation_select {
+	float: left;
+	width: 236px;
+	height: 36px;
+	margin-right: 28px;
+	background-color: white;
+	cursor: pointer;
+	overflow: hidden;
+	// &.focus {
+	// 	
+	// }
+	&:hover {
+		position: relative;
+		margin-right: 26px;
+		top: -1px;
+		left: -1px;
+		height: auto;
+		width: 236px;
+		border: 1px solid $brown-red; 
+		border-bottom: none;
+	}
+	> p {
+		display: inline-block;
+		margin: 0;
+		width: 201px;
+		color: #A8AAAA;
+		font-size: 12px;
+		text-indent: 11px;
+		line-height: 36px;
+	}
+	> div {
+		position: relative;
+		float: right;
+		width: 19px;
+		height: 19px;
+		top: 8px;
+		right: 8px;
+		line-height: 19px;
+		text-align: center;
+		font-family: LiSu;
+		font-size: 16px;
+		font-weight: bolder;
+		color: white;
+		transform: rotate(90deg);
+		background-color: $brown-red;
+		cursor: pointer;
+	}
+	> ul {
+		margin: 0;
+		padding: 0;
+		padding-bottom: 6px;
+		width: 236px;
+		border-bottom: 1px solid $brown-red;
+		background-color: #E3E3E5;
+		> li {
+			padding-left: 9px;
+			width: 227px;
+			height: 26px;
+			font-size: 12px;
+			text-indent: 28px;
+			line-height: 26px;
+			color: #89898A;
+			cursor: pointer;
+			&:hover {
+				text-indent: 0;
+				background-color: $brown-red;
+				color: white;
+				&::before {
+					display: inline-block;
+					position: relative;
+					top: 2px;
+					padding-left: 9px;
+					padding-right: 19px;
+					width: 0px;
+					height: 12px;
+					content: "";
+					@include icons-sprite(true);
+				}
+			}
+		}
+	}
+}
+
+#search {
+	width: 236px;
+	height: 36px;
+	border: 0;
+	background-color: $brown-red;
+	font-size: 14px;
+	letter-spacing: 22px;
+	text-indent: 22px;
+	color: white;
+}
+
+
+#place_holder_4 {
+	height: 605px;
+}
+
+
+
+#contect_us {
+}
+
+.hidden_area {
+	display: none;
+}
+
+.std_underline {
+	margin: 0 auto;
+	width: 30px;
+	height: 2px;
+}
+
+.white {
+	background-color: white;
+}
+
+.brown_red {
+	background-color: $brown-red;
+}

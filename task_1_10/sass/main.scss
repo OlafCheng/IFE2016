@@ -1,0 +1,39 @@
+body {
+	margin: 0;
+	padding: 20px;
+	display: -webkit-flex;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-between;
+	align-items: center;
+}
+
+div {
+	margin-bottom: 20px;
+	width: 148px;
+	border: 1px solid red;
+	&:first-child {
+		height: 150px;
+	}
+	&:nth-child(2) {
+		height: 100px;
+	}
+	&:nth-child(3) {
+		height: 40px;
+	}
+	&:last-child {
+		height: 200px;
+		border-color: #00F;
+	}
+}
+
+@media screen and (max-width: 640px) {
+	body {
+		flex-wrap: wrap;
+		align-items: flex-start;
+	}
+	div:last-child {
+		order: -1;
+	}
+}
