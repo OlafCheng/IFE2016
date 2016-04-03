@@ -1,5 +1,5 @@
-.icons-base, #tags li a::before, #columns li a::before {
-  background: url('../images/icons-sefd5e2ac4d.png') no-repeat;
+.icons-base, header div::before, #tags li a::before, #columns li a::before {
+  background: url('../images/icons-s574495267e.png') no-repeat;
 }
 
 .margin-holder, #columns, .text-modules {
@@ -13,7 +13,7 @@
 }
 
 .post-date span {
-  font-size: 0.8125rem;
+  font-size: 0.8125rem !important;
   color: #c0c0c0;
 }
 .post-date span:nth-child(2)::before {
@@ -94,13 +94,14 @@ header div {
   background-color: transparent;
 }
 header div::before {
-  content: "<";
+  height: 49px;
+  width: 29px;
+  background-position: 0 0;
+  content: "";
   display: inline-block;
   position: relative;
-  padding-right: 0rem;
-  top: 0.0625rem;
-  font-size: 1.125rem;
-  font-family: "Letter Gothic Std";
+  top: 0.25rem;
+  padding-right: 0.0625rem;
 }
 
 .full-flex, nav, #tags {
@@ -143,7 +144,7 @@ nav a.on {
   color: black;
 }
 #tags li a::before {
-  background-position: -20% -499px;
+  background-position: -20% -558px;
   content: "";
   display: block;
   margin: 0 auto;
@@ -187,19 +188,19 @@ nav a.on {
   line-height: 1.25rem;
 }
 #columns li:first-child a::before {
-  background-position: 0 0;
+  background-position: 0 -59px;
   height: 178px;
   width: 127px;
 }
 #columns li:nth-child(2) a::before {
-  background-position: 0 -188px;
+  background-position: 0 -247px;
   height: 166px;
   width: 122px;
   margin-top: 0.125rem;
   margin-bottom: 0.25rem;
 }
 #columns li:last-child a::before {
-  background-position: 0 -364px;
+  background-position: 0 -423px;
   height: 135px;
   width: 200px;
   margin-top: 0.6875rem;
@@ -230,10 +231,11 @@ nav a.on {
   margin-bottom: 0.625rem;
 }
 .text-modules div a {
-  flex: 1 0 auto;
+  display: inline-block;
+  float: left;
   margin-right: 0.75rem;
   margin-bottom: 0.75rem;
-  min-width: 40%;
+  width: 7.9375rem;
   height: 2.375rem;
   line-height: 2.3125rem;
   font-size: 0.9375rem;
@@ -253,9 +255,6 @@ nav a.on {
   width: 5.9375rem;
 }
 .text-modules div:last-child {
-  display: -webkit-flex;
-  display: flex;
-  flex-flow: row wrap;
   float: left;
   width: 16.6875rem;
 }

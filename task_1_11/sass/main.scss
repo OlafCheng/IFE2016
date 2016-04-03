@@ -35,7 +35,7 @@ $margin-holder: (100% - 355/375 * 100%) / 2;
 
 .post-date {
     span {
-        font-size: remp(13);
+        font-size: remp(13) !important;
         color: #c0c0c0;
         &:nth-child(2)::before {
             content: "";
@@ -123,13 +123,14 @@ header {
         line-height: remp(41);
         background-color: transparent;
         &::before {
-            content: "<";
+            @extend .icons-base;
+            @include sprite-dimensions($icons, back);
+            @include sprite-background-position($icons, back);
+            content: "";
             display: inline-block;
             position: relative;
-            padding-right: remp(0);
-            top: remp(1);
-            font-size: remp(18);
-            font-family: "Letter Gothic Std";
+            top: remp(4);
+            padding-right: remp(1);
         }
     }
 }
@@ -266,10 +267,11 @@ nav {
             }
         }
         a {
-            flex: 1 0 auto;
+            display: inline-block;
+            float: left;
             margin-right: remp(12);
             margin-bottom: remp(12);
-            min-width: 40%;
+            width: remp(127);
             height: remp(38);
             line-height: remp(37);
             font-size: remp(15);
@@ -289,9 +291,6 @@ nav {
             width: remp(95);
         }
         &:last-child {
-            display: -webkit-flex;
-            display: flex;
-            flex-flow: row wrap;
             float: left;
             width: remp((355 - 88));
         }
