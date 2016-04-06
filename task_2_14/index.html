@@ -1,38 +1,229 @@
-<!DOCTYPE html>
-<html>
-  <head>
+﻿<!DOCTYPE html>
+    <html>
+    <head>
     <meta charset="utf-8">
     <title>IFE JavaScript Task 01</title>
-  </head>
+    </head>
 <body>
 
-  <h3>污染城市列表</h3>
-  <ul id="aqi-list">
-<!--   
+<h3>污染城市列表</h3>
+<ul id="aqi-list">
+    <!--   
     <li>第一名：福州（样例），10</li>
     <li>第二名：福州（样例），10</li> -->
-  </ul>
+</ul>
 
 <script type="text/javascript">
 
 var aqiData = [
-  ["北京", 90],
-  ["上海", 50],
-  ["福州", 10],
-  ["广州", 50],
-  ["成都", 90],
-  ["西安", 100]
+    ["北京", 600],
+    ["上海", 200],
+    ["福州", 170],
+    ["广州", 80],
+    ["成都", 300],
+    ["西安", 400],
+    ["西藏", 10],
+    ["海南", 37]
 ];
 
 (function () {
 
-  /*
-  在注释下方编写代码
-  遍历读取aqiData中各个城市的数据
-  将空气质量指数大于60的城市显示到aqi-list的列表中
-  */
+    /*
+    在注释下方编写代码
+    遍历读取aqiData中各个城市的数据
+    将空气质量指数大于60的城市显示到aqi-list的列表中
+    */
 
-})();
+    /**
+     * 二叉树节点
+     *
+     * @param {Array} data 包含城市名称和 aqi 数值的数组
+     * @param {Object} left 左节点
+     * @param {Object} right 右节点
+     * @class
+     */
+    function Node(data, left, right) {
+        this.data = data;
+        this.aqi = data[0];
+        this.left = left;
+        this.right = right;
+        this.show = show;
+    }
+
+    function show() {
+        return this.data;
+    }
+
+    /**
+     * 二叉查找树的插入方法
+     *
+     * @para {Array} data [aqi数值, '城市名']
+     */
+    function insert(data) {
+        var n = new Node(data, null, null);
+
+        if (this.root == null) {
+            this.root = n;
+        } else {
+            var current = this.root;
+            var parent;
+            while(true) {
+                parent = current;
+                if (data[0] < current.data[0]) {
+                    current = current.left;
+                    if (current == null) {
+                        parent.left = n;
+                        break;
+                    }
+                } else {
+                    current = current.right
+                    if (current == null) {
+                        parent.right = n;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 二叉查找树
+     *
+     * @class
+     */
+    function BST() {
+        this.root = null;
+        this.inOrder = inOrder;
+        this.insert = insert;
+    }
+
+    /**
+     * BST 中序遍历
+     */
+    var ranking = [];
+    function inOrder(node) {
+        if (!(node == null)) {
+            inOrder(node.left);
+            ranking.push(node.show(node));
+            inOrder(node.right);
+        }
+    }
+
+
+    /**
+     * 从 aqiData 中过滤出指数大于 60 的数组元素
+     *
+     * @return {Array} city 返回一个 aqi 数值大于 60 的新数组
+     */
+    function ifGreaterThan60(city) {
+        return city[0] > 60;
+    }
+
+    function swap(array) {
+    for (var i = array.length - 1; i >= 0; i--) {
+        var tmp;
+            tmp = array[i][0];
+            array[i][0] = array[i][1];
+            array[i][1] = tmp;
+        }
+    }
+
+    function compare(a, b) {
+        return a - b;
+    }
+
+    /**
+     * 将阿拉伯数字转化为汉字大写
+     *
+     * @param {int} num 待转化的数字
+     * @return {string} 转化的结果
+     */
+    function convertIntToZh(num) {
+        num += "";
+        if (num.length > 15) {
+            return "数字过大！";
+        }
+
+        var group = [];
+        var tmp = num;
+        var len = tmp.length;
+        while (len > 0) {
+            var end = len;
+            var start = end - 4 > 0 ? end - 4 : 0;
+            group.push(tmp.slice(start, end));
+            len -= 4;
+        }
+
+        function minus(a) {
+            return +a !== 0;
+        }
+
+        var NUMBER_ZH = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九', '十'];
+        var UNIT = ['', '十', '百', '千', '万', '亿'];
+        var BASE_UNIT = ['', '万', '亿', '万亿'];
+        var result = '';
+        var ifHead = true;
+        for (var i = 0; i < group.length; i++) {
+            var ifZero = false;
+            var para = '';
+            if (!+group[i]) {
+                continue;
+            }
+            for (var j = group[i].length - 1; j >= 0; j--) {
+                var currentPosition = group[i].length - j - 1;
+                if (+group[i][j] === 0) {
+                    if (ifZero) {
+                        continue;
+                    } else if (ifHead) {
+                        continue;
+                    } else {
+                        ifZero = true;
+                        para = NUMBER_ZH[+group[i][j]] + para;
+                        ifHead = false;
+                    }
+                } else {
+                    ifZero = false;
+                    para = NUMBER_ZH[+group[i][j]] + UNIT[currentPosition] + para;
+                    ifHead = false;
+                }
+            }
+            var lastNumber = +group[i][group[i].length - 1];
+            if (lastNumber === 0) {
+                result = para.slice(0, -1) + BASE_UNIT[i] + para[para.length - 1] + result;
+            } else {
+                result = para + BASE_UNIT[i] + result;
+            }
+        }
+
+        if (result[0] === NUMBER_ZH[1]
+            && group[group.length - 1].length === 1
+            && group.length !== 1) {
+            result = result.substr(1, result.length);
+        }
+        return result;
+    };
+
+    swap(aqiData);
+    var CityRanking = new BST();
+
+
+    var cityList = aqiData.filter(ifGreaterThan60);
+    for (var i = cityList.length - 1; i >= 0; i--) {
+        CityRanking.insert(cityList[i]);
+    }
+
+    inOrder(CityRanking.root);
+
+    var list = document.getElementById("aqi-list");
+    for (var i = ranking.length - 1; i >= 0; i--) {
+       var li = document.createElement("li");
+       var txtContent = "第" + convertIntToZh(ranking.length - i) + "名：" + ranking[i][1] + "，" + ranking[i][0];
+       var txt = document.createTextNode(txtContent);
+       li.appendChild(txt);
+       list.appendChild(li);
+    }
+
+}());
 
 </script>
 </body>
