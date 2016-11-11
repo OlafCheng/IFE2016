@@ -1,0 +1,18 @@
+/* line 1, ../sass/index.scss */
+#link-list > p {
+  display: inline-block;
+  height: 15px;
+  width: auto;
+  padding-left: 5px;
+  padding-right: 5px;
+  border: 1px solid #CCC;
+  border-radius: 4px;
+  box-shadow: 0px 0px 4px #666;
+  margin-right: 10px;
+  font-style: 16px;
+  color: black;
+  background-color: pink;
+  text-align: center;
+  line-height: 15px;
+  font-family: Arial;
+}

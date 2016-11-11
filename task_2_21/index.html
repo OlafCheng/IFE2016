@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>task 2-21</title>
+    <style type="text/css">
+        #tags-container {
+            min-height: 4rem;
+        }
+        #tags-container div, #favorite div {
+            font-family: Arial;
+            font-size: 1.1rem;
+            display: inline-block;
+            margin: 0.5rem;
+            background-color: #FFFF66;
+            border-radius: 0.4rem;
+            border: 0.2em solid #CCC;
+            padding: 0.2rem;
+            color: black;
+        }
+        #tags-container div span {
+            border-right: 1px solid black;
+            font-size: 0.9rem;
+            font-family: Microsoft Yahei;
+            color: black;
+            padding-right: 0.3rem;
+            padding-left: 0.15rem;
+            margin-right: 0.3rem;
+            line-height: 0.8rem;
+        }
+        textarea {
+            width: 16rem;
+            height: 12rem;
+        }
+        #favorite div {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+<label for="tags">Tag:</label>
+<input type="text" name="tags" id="tags">
+<br>
+<div id="tags-container"></div>
+<textarea></textarea>
+<br>
+<button id="ensure-favorites">确认兴趣爱好</button>
+<div id="favorite"></div>
+</body>
+<script src="task.js"></script>
+</html>

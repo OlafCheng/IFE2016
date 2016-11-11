@@ -1,0 +1,52 @@
+/* line 1, ../sass/index.scss */
+#link-list > p {
+  display: inline-block;
+  height: 15px;
+  width: auto;
+  padding-left: 5px;
+  padding-right: 5px;
+  border: 1px solid #CCC;
+  border-radius: 4px;
+  box-shadow: 0px 0px 4px #666;
+  margin-right: 10px;
+  font-style: 16px;
+  color: black;
+  background-color: pink;
+  text-align: center;
+  line-height: 15px;
+  font-family: Arial;
+}
+
+/* line 19, ../sass/index.scss */
+#sheet div, #sort-animation div {
+  display: inline-block;
+  background-color: #CC99FF;
+}
+
+@keyframes rainbow {
+  0% {
+    background: #CC99FF;
+  }
+  50% {
+    background: red;
+  }
+  100% {
+    background: #CC99FF;
+  }
+}
+/* line 30, ../sass/index.scss */
+#sort-animation > div {
+  width: 1rem;
+  margin-right: 0.2rem;
+  animation: 0.5s rainbow;
+}
+
+/* line 37, ../sass/index.scss */
+#sort-animation > div.red {
+  background-color: red;
+}
+
+/* line 41, ../sass/index.scss */
+#sheet > .black, #sort-animation > .black {
+  background-color: #640033;
+}

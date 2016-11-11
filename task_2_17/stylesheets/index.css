@@ -1,0 +1,13 @@
+/* line 1, ../sass/index.scss */
+#rectangle {
+  position: relative;
+  padding: 5px;
+  height: 400px;
+  min-width: 10px;
+  background-color: #fcfcee;
+}
+/* line 7, ../sass/index.scss */
+#rectangle > div {
+  position: relative;
+  float: left;
+}

@@ -1,0 +1,11 @@
+#rectangle {
+    position: relative;
+    padding: 5px;
+    height: 400px;
+    min-width: 10px; 
+    background-color: #fcfcee;
+    > div {
+        position: relative;
+        float: left;
+    }
+}
