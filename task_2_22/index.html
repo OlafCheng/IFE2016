@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>task-2-22 Binary Tree</title>
+  <style type="text/css">
+    div {
+      border: 0.2rem #666 solid;
+      padding: 0.2rem;
+      margin: 0.2rem;
+      min-height: 1rem;
+      line-height: 2rem;
+      background-color: yellow;
+      border-radius: 0.4rem;
+      transition: background-color 0.5s;
+    }
+    div.fire {
+      background-color: green;
+    }
+    body > div {
+      display: flex;
+      width: 80%;
+      min-height: 2em;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      align-items: center;
+    }
+    body > div > div {
+      flex-grow: 1;
+    }
+    body > div > div > div {
+      flex-grow: 1;
+    }
+  </style>
+</head>
+<body>
+<div id="e0">
+  <div id="e1">
+    <div id="e3">
+      <div id="e7"></div>
+      <div id="e8"></div>
+    </div>
+    <div id="e4">
+      <div id="e9"></div>
+      <div id="e10"></div>
+    </div>
+  </div>
+  <div id="e2">
+    <div id="e5">
+      <div id="e11"></div>
+      <div id="e12"></div>
+    </div>
+    <div id="e6">
+      <div id="e13"></div>
+      <div id="e14"></div>
+    </div>
+  </div>
+</div>
+<button id="inOrder">in order</button>
+<button id="preOrder">previous order</button>
+<button id="postOrder">post order</button>
+</body>
+<script type="text/javascript" src="task.js"></script>
+</html>
