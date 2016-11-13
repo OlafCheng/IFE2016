@@ -2,6 +2,7 @@ var config = {
   timer: 500
 };
 
+// 动画队列函数
 function delay(fn, t) {
   var schQueue = [];
   var currentTask = null;
@@ -69,6 +70,7 @@ BST.prototype.insert = function(data) {
       if (data <= parent.data) {
         current = current.left;
         if (current === null) {
+          // 下面不能用 current = n 来赋值，会出错
           parent.left = n;
           break;
         }
@@ -84,6 +86,10 @@ BST.prototype.insert = function(data) {
 }
 
 BST.prototype.inOrder = function(){
+  // 通过原型链调用方式, 获得正确的 this
+  // 实现原型链的传参
+  // 给立即执行函数加上名字, 方便递归调用
+  // arguments.callee 在严格模式下是会报错的
   (function fn(node){
     if (node !== null) {
       fn(node.left);
@@ -115,6 +121,7 @@ BST.prototype.postOrder = function() {
 
 var tree = new BST();
 
+// 扫描 div, 获取 id 信息放入 BST
 (function fn(node){
   tree.insert(~~(node.getAttribute("id").slice(1)));
   if (node.hasChildNodes()) {
