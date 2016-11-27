@@ -6,7 +6,7 @@ function addLoadEvent(f) {
         window.onload = function() {
             oldLoad();
             f();
-        }
+        };
     }
 }
 var q = new LinkList();
@@ -69,13 +69,13 @@ function frontDel (o) {
             o.head.next = null;
             o.tail = o.head;
         }
-    }
+    };
 }
 
 function backDel (o) {
     return function () {
         updateTail(q);
-        q.print()
+        q.print();
         if (o.tail === o.head) {
             // 如果链表中只剩下了 head , 则什么都不做
         } else if (o.tail.previous === o.head) {
@@ -87,7 +87,7 @@ function backDel (o) {
             o.tail = o.tail.previous;
             o.tail.next = null;
         }
-    }
+    };
 }
 
 function getNode () {
@@ -96,7 +96,7 @@ function getNode () {
     input.value = null;
     input.focus();
     if (!!value) {
-        return new Node(value)
+        return new Node(value);
     } else {
         // alert("You haven't input anything!");
         console.log("Nothing!");
@@ -144,7 +144,7 @@ function buttonInit() {
     li.addEventListener("click", render(q));
     ri.addEventListener("click", function() {
         if (q.length() < 61) {
-            backAdd(q, getNode)
+            backAdd(q, getNode);
         } else {
             alert("Elements mustn't more than 60!");
         }

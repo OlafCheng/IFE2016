@@ -36,128 +36,181 @@ function delay(fn, t) {
       if (_task || _queue.length) {
         _queue.push({fn: fn, t: t});
       } else {
-        _schTask(fn, t)
+        _schTask(fn, t);
       }
 
       return privilegeMethod;
     }
-  }
+  };
   return privilegeMethod.delay(fn, t);
 }
+
+//  childNodes.nodeType === 1
+function findChildNodes(node) {
+  return !node.childNodes ?
+          null :
+          [].filter.call(node.childNodes, (e) => {return e.nodeType && e.nodeType === 1;});
+}
+
 
 var taskQueue = delay(function(){}, 0);
 var aniQueue = taskQueue.delay;
 
-TreeWalker = {};
+TreeWalker = function () {};
 
 TreeWalker.prototype.show = function(){
   (function(node){
     // animtation
-    var content = node.firstChild;
-    if (content.nodeType === 3) {
-      console.log(content.match(/\w+/)[0]);
-    }
-  })(this);
-}
-
-TreeWalker.prototype.inOrder = function(){
-  (function fn(node){
-    if (node && node.nodeType === 1) {
-      if (node.firstChild.nodeType === 3) {
-        fn(node.firstChild.nextSibling);
+    var content = node.firstChild || node[0] || node;
+    var txt = "";
+    var container = null;
+    if (content.nodeType) {
+      if (content.nodeType === 1) {
+        txt = content.firstChild.textContent;
+        container = content;
+      } else if (content.nodeType === 3) {
+        txt = content.textContent;
+        container = content.parentNode;
       } else {
-        fn(node.firstChild);
+        throw("something wrong with txt process");
       }
-      TreeWalker.show.call(node);
-      fn(node.lastChild);
+      aniQueue(()=>{
+        container.style.backgroundColor = "red";
+        container.style.color = "white";
+      }, 0);
+      aniQueue(()=>{
+        container.removeAttribute("style");
+      }, config.timer);
+      console.log(" "[0].match.call(txt, /\w+/)[0]);
     }
   })(this);
-}
+};
 
-TreeWalker.prototype.preOrder = function() {
-  (function fn(node){
-    if (node && node.nodeType === 1) {
-      TreeWalker.show.call(node);
-      if (node.firstChild.nodeType === 3) {
-        fn(node.firstChild.nextSibling);
-      } else {
-        fn(node.firstChild);
+TreeWalker.prototype.branchWalker = function(para, direction){
+  (function fn(that, node, d){
+    var childs = findChildNodes(node);
+    var left = childs.shift();
+    var right = childs.pop();
+
+    _searchLeft = (that, left) => {
+      if (left) {
+        fn(that, left, d);
       }
-      fn(node.lastChild);
-    }
-  })(this);
-}
+    };
 
-TreeWalker.prototype.postOrder = function() {
-  (function fn(node){
-    if (node && node.nodeType === 1) {
-      if (node.firstChild.nodeType === 3) {
-        fn(node.firstChild.nextSibling);
-      } else {
-        fn(node.firstChild);
+    _searchRight = (that, right) => {
+      if (right) {
+        fn(that, right, d);
       }
-      fn(node.lastChild);
-      TreeWalker.show.call(node);
-    }
-  })(this);
-}
+    };
 
-TreeWalker.prototype.BFS = function(){
-  (function fn(node){
-    if (node && node.nodeType === 1) {
-      var current = node.firstChild;
-      while (current) {
-        if (current.nodeType === 1) {
-          TreeWalker.show.call(e);
-        }
-        if (current.childNodes) {
-          fn(current);
-        }
-        current = current.nextSibling;
+    _showSelf = (node) => {
+      that.show.call(node);
+    };
+
+    switch(d) {
+      case -1:// preOrder
+        _showSelf(node);
+        _searchLeft(that, left);
+        _searchRight(that, right);
+        break;
+      case 0:
+        _searchLeft(that, left);
+        _showSelf(node);
+        _searchRight(that, right);
+        break;
+      case 1:
+        _searchLeft(that, left);
+        _searchRight(that, right);
+        _showSelf(node);
+        break;
+      default:
+        break;
+    }
+  })(this, para, direction);
+};
+
+TreeWalker.prototype.BFS = function(para) {
+  (function fn(that, node) {
+    var stack = [];
+    var current = para;
+
+    if (current && current.nodeType === 1) {
+      stack.push(current);
+    }
+
+    var tmpNode = stack.shift();
+    while (tmpNode) {
+      that.show.call(tmpNode);
+      if (tmpNode.childNodes) {
+        stack = stack.concat(findChildNodes(tmpNode));
       }
-    }
-  })(this);
-}
 
-TreeWalker.prototype.DFS = function(){
-  (function fn(node){
-    var current = node.firstChild;
-    
-  })(this);
-}
+      tmpNode = stack.shift();
+    }
+  })(this, para);
+};
+
+TreeWalker.prototype.DFS = function(para){
+  (function (that, para) {
+    //  用 new 关键字实现的
+    //  walker 的 prototype 指向构造函数的 prototype 属性
+    //  TreeWalker.prototype 
+    that.show.call(para.firstChild);
+    var current = findChildNodes(para);
+    var stack = [];
+    if(current && current.length) {
+      stack = stack.concat(current);
+    }
+
+    var tmpNode = stack.shift();
+    while(tmpNode) {
+      that.show.call(tmpNode);
+      if(tmpNode.childNodes) {
+        stack = findChildNodes(tmpNode).concat(stack);
+      }
+      tmpNode = stack.shift();
+    }
+  })(this, para);
+};
 
 var $ = function(selector){
   return document.querySelector(selector);
-}
+};
 
-var e = $("body > div");
-var search = $("#ensure");
-var inOrder = $("#inOrder");
-var preOrder = $("#preOrder");
-var postOrder = $("#postOrder");
-var BFS = $("#BFS");
-var DFS = $("DFS");
+// 初始化函数
+(function () {
+  var nodes = $("body > div");
+  var search = $("#ensure");
+  var inOrder = $("#inOrder");
+  var preOrder = $("#preOrder");
+  var postOrder = $("#postOrder");
+  var BFS = $("#BFS");
+  var DFS = $("#DFS");
 
-search.addEventListener("click", function(){
-  TreeWalker.search.call(e);
-});
+  var walker = new TreeWalker();
 
-inOrder.addEventListener("click", function(){
-  TreeWalker.inOrder.call(e);
-});
+  search.addEventListener("click", function(){
+    walker.search.call(walker, nodes);
+  });
 
-preOrder.addEventListener("click", function(){
-  TreeWalker.preOrder.call(e);
-});
+  inOrder.addEventListener("click", function(){
+    walker.branchWalker.call(walker, nodes, 0);
+  });
 
-postOrder.addEventListener("click", function(){
-  TreeWalker.postOrder.call(e);
-});
+  preOrder.addEventListener("click", function(){
+    walker.branchWalker.call(walker, nodes, -1);
+  });
 
-BFS.addEventListener("click", function(){
-  TreeWalker.BFS.call(e);
-});
+  postOrder.addEventListener("click", function(){
+    walker.branchWalker.call(walker, nodes, 1);
+  });
 
-DFS.addEventListener("click", function(){
-  TreeWalker.DFS.call(e);
-});
+  BFS.addEventListener("click", function(){
+    walker.BFS.call(walker, nodes);
+  });
+
+  DFS.addEventListener("click", function(){
+    walker.DFS.call(walker, nodes);
+  });
+})();
