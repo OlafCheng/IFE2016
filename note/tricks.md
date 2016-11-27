@@ -170,7 +170,7 @@ function Node (data) {
 
 function LinkList () {
     this.head = new Node("head");
-    this.someMethond = someMethond;
+    this.someMethod = someMethod;
     this.eventProcessFunction = eventProcessFunction;
 }
 
@@ -502,8 +502,24 @@ var EventUntil = {
 }
 ```
 
-## 怎么在对象原型的内部，获得调用其的继承元素的指针？
-如下：
+## 怎么在对象原型的内部，获得调用其的继承元素的指针?
+不知道。
+现在想要获取继承元素的指针的原因是，想要使用原型上的某个方法, 而且这个原型的方法需要使用到某些传参，所以既要能调用原型链上的方法，又要能给方法传递参数。
+这两者结合起来就会比较复杂, 所以这样办：
 ```
 var Tree = () => {};
+Tree.prototype.someMethod = (argu) => {
+    !function fn(that) {
+        that.someMethod.call(argu);// 实现了调用自身, 并且传参
+    }(this, para);
+};
+var tree = new Tree();
+
+tree.someMethod.call(tree, para);
 ```
+
+## setAttribute addClass removeAttribute removeClass
+原生 js 里没有直接针对 class 属性的操作方法, addClass 与 removeClass 均来自 jQuery
+可以自己实现 `addClass` 与 `removeClass`
+
+##
