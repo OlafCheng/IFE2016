@@ -10,7 +10,7 @@ function addLoadEvent(func) {
         window.onload = function() {
             oldLoad();
             func();
-        }
+        };
     }
 }
 
@@ -33,8 +33,8 @@ function addAqiData(name, value) {
 }
 
 function removeAllChildren(o) {
-    var l = undefined;
-    var c = undefined;
+    var l = null;
+    var c = null;
     while(1) {
         l = o.childNodes.length;
         c = o.childNodes[l - 1 > 0 ? l - 1 : 0];
@@ -55,6 +55,7 @@ function renderAqiList() {
     removeAllChildren(table);
     table.appendChild(drawTr());
 
+    var key = null;
     for (key in aqiData) {
         table.appendChild(drawTr(key, aqiData[key], true));
     }
@@ -75,7 +76,7 @@ function renderAqiList() {
 
     function drawTd(o) {
         var td = document.createElement("td");
-        var inner = undefined;
+        var inner = null;
         var button = document.createElement("button");
         button.appendChild(document.createTextNode("删除"));
         button.onclick = delBtnHandle;

@@ -3,7 +3,9 @@
 .sass-cache/
 .git/
 psd-source/
-
+task_2_25/node_modules/
+task_2_25/scss.js
+task_2_25/scss/
 
 # 需要忽略的单个文件
 ie.scss

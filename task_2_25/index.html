@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>task-2-25</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      body {
+        margin: 0;
+        display: flex;
+        font-family: STHeiti;
+      }
+      #tree > ul {
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        margin-left: 1rem;
+      }
+      ul {
+        list-style: none;
+        margin: 0;
+        padding-left: 1rem;
+        padding-right: 1rem;
+        transition: height 0.4s;
+        overflow: hidden;
+      }
+      ul.shrink {
+        height: 0;
+        overflow: hidden;
+      }
+      ul li {
+        line-height: 1.5rem;
+        cursor: pointer;
+        color: black;
+        transition: color 0.2s;
+      }
+      ul li:hover {
+        color: darkred;
+        text-shadow: 2px 0px 4px lightgray;
+      }
+      #tree {
+        position: relative;
+        flex: 0 0.5 auto;
+        background-color: lightgray;
+      }
+      #table {
+        flex: 1 1 auto;
+        background-color: lightslategray;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="tree"></div>
+    <script src="task.js"></script>
+  </body>
+</html>
