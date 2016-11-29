@@ -41,6 +41,9 @@ treeRender = (data) => {
   var leafs = document.createDocumentFragment();
   var topUl = document.createElement("ul");
   var tree = $("#tree");
+  while(tree.firstChild) {
+    tree.removeChild(tree.firstChild);
+  }
   // 向 parent 中传入一个父节点, 将渲染的结果 appendChild 入更高一级节点
   /*
     期望输入 data 中的对象
@@ -75,7 +78,9 @@ treeRender = (data) => {
       }
       li.appendChild(ul1);
       ul.appendChild(li);
-      return ul;
+      li = document.createElement("li");
+      li.appendChild(ul);
+      return li;
     } else {
       span = document.createElement("span");
       span.setAttribute("class", "node");
@@ -90,14 +95,46 @@ treeRender = (data) => {
     topUl.appendChild(renderBranch(data[name], name));
   }
   tree.appendChild(topUl);
+
+  var nodes = document.getElementsByClassName("node");
+  [].map.call(nodes, (e) => {
+    e.addEventListener("mouseenter", (e) => {
+      var target = e.target;
+      var className = target.className;
+      var txt = document.createTextNode(" - Del");
+      var span = document.createElement("span");
+      span.setAttribute("class", "delete");
+      span.appendChild(txt);
+      if(className === "node") {
+        target.appendChild(span);
+      }
+    });
+  });
+  [].map.call(nodes, (e) => {
+    e.addEventListener("mouseleave", (e) => {
+      var target = e.target;
+      var className = target.className;
+      if (className === "node") {
+        target.removeChild(target.lastChild);
+      }
+    });
+  });
+
+  getHeight = (node) => {
+    var ul = node.nextSibling.nextSibling;
+    var height = window.getComputedStyle(ul, null).getPropertyValue("height");
+    ul.style.height = height;
+  };
+
+  ul = document.getElementsByClassName("branch-node");
+  var i;
+  for(i = 0; i < ul.length; i++) {
+    getHeight(ul[i]);
+  }
+
 };
 
 treeRender(treeData);
-
-// 用于渲染右侧的列表
-tableRender = (node) => {
-
-};
 
 var heightStorage = {};
 toggleShrink = (target) => {
@@ -117,21 +154,28 @@ toggleShrink = (target) => {
 };
 
 deleteNode = (target) => {
-  var txt = target.textContent;
+  var newTree = {};
+  var txt = target.parentNode.firstChild.textContent;
+  console.log("txt = " + txt);
+  var tmpNode = null;
   delNode = (node) => {
-    if(node === txt) {
-      
-    }
-    var tmpNode;
-    if(node.children) {
-
+    if (txt === node)  {
+      node = null;
+    } else if (node.children) {
+      for(tmpNode in node.children) {
+        console.log("node = " + tmpNode);
+        delNode(tmpNode);
+      }
     }
   };
   
   var node;
   for (node in treeData) {
+    console.log("node = " + node);
+    newTree.node = {};
     delNode(node);
   }
+  treeRender(treeData);
 };
 
 // 事件代理
@@ -151,41 +195,3 @@ document.body.addEventListener("click", (e) => {
       break;
   }
 });
-var nodes = document.getElementsByClassName("node");
-[].map.call(nodes, (e) => {
-  e.addEventListener("mouseenter", (e) => {
-    var target = e.target;
-    var className = target.className;
-    var txt = document.createTextNode(" - Del");
-    var span = document.createElement("span");
-    span.setAttribute("class", "delete");
-    span.appendChild(txt);
-    if(className === "node") {
-      target.appendChild(span);
-    }
-  });
-});
-[].map.call(nodes, (e) => {
-  e.addEventListener("mouseleave", (e) => {
-    var target = e.target;
-    var className = target.className;
-    if (className === "node") {
-      target.removeChild(target.lastChild);
-    }
-  });
-});
-
-// 初始化
-(() => {
-  getHeight = (node) => {
-    var ul = node.nextSibling.nextSibling;
-    var height = window.getComputedStyle(ul, null).getPropertyValue("height");
-    ul.style.height = height;
-  };
-
-  var ul = document.getElementsByClassName("branch-node");
-  var i;
-  for(i = 0; i < ul.length; i++) {
-    getHeight(ul[i]);
-  }
-})();

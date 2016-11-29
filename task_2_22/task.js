@@ -27,9 +27,9 @@ function delay(fn, t) {
       }
       return self;
     }
-  }
+  };
 
-  return self.delay(fn, t)
+  return self.delay(fn, t);
 }
 
 var aniQueue = delay(function(){}, 0).delay;
@@ -52,7 +52,7 @@ Node.prototype.show = function() {
     }, config.timer);
   })(e);
   return this.data;
-}
+};
 
 function BST() {
   this.root = null;
@@ -83,7 +83,7 @@ BST.prototype.insert = function(data) {
       }
     }
   }
-}
+};
 
 BST.prototype.inOrder = function(){
   // 通过原型链调用方式, 获得正确的 this
@@ -107,7 +107,7 @@ BST.prototype.preOrder = function(){
       fn(node.right);
     }
   })(this.root);
-}
+};
 
 BST.prototype.postOrder = function() {
   (function fn(node){
@@ -117,7 +117,7 @@ BST.prototype.postOrder = function() {
       node.show();
     }
   })(this.root);
-}
+};
 
 var tree = new BST();
 

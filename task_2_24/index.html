@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>task-2-24</title>
+  <meta charset="utf-8">
+  <style type="text/css">
+    div {
+      font-family: Arial;
+      display: flex;
+      flex-grow: 1;
+      line-height: 1.5rem;
+      border: black solid 0.2rem;
+      border-radius: 1rem;
+      padding: 0.3rem;
+      margin: 0.1rem 0.5rem;
+      color: black;
+      background-color: white;
+      transition: color 0.2s, background-color 0.4s;
+    }
+    div[data-checked="yes"] {
+      background-color: sandybrown;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+<div>
+  fish
+  <div>
+    cat
+    <div>
+      apple
+      <div>pig</div>
+      <div>tomato</div>
+      <div>potato</div>
+    </div>
+  </div>
+  <div>
+    dog
+    <div>banana</div>
+    <div>pear</div>
+    <div>pig</div>
+    <div>bear</div>
+  </div>
+  <div>doge
+    <div>funny</div>
+    <div>monky</div>
+    <div>
+      monk
+      <div>salior</div>
+      <div>solider</div>
+      <div>commander</div>
+    </div>
+  </div>
+</div>
+<p>Search by BFS</p>
+<label for="search">Input:</label>
+<input type="text" name="search" id="search" />
+<br />
+<br />
+<button id="ensure">Search (by BFS)</button>
+<button id="update">Update</button>
+<button id="delete">Delete</button>
+<br />
+<br />
+<button id="inOrder">in order</button>
+<button id="preOrder">previous order</button>
+<button id="postOrder">post order</button>
+<button id="BFS">breadth first search</button>
+<button id="DFS">depth first search</button>
+</body>
+<script type="text/javascript" src="task.js"></script>
+</html>
