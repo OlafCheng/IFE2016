@@ -36,162 +36,24 @@ treeData = {
   }
 };
 
-// 用于渲染树
-treeRender = (data) => {
-  var leafs = document.createDocumentFragment();
-  var topUl = document.createElement("ul");
-  var tree = $("#tree");
-  while(tree.firstChild) {
-    tree.removeChild(tree.firstChild);
-  }
-  // 向 parent 中传入一个父节点, 将渲染的结果 appendChild 入更高一级节点
-  /*
-    期望输入 data 中的对象
-    输出遍历输入后, 给出的 documentFragment
-  */
-  renderBranch = (parent, str) => {
-    var key = null;
-    var frag = null;
-    var ul = null;
-    var ul1 = null;
-    var li = document.createElement("li");
-    var txt = document.createTextNode(str);
-    var span = null;
-    if (parent.children) {
-      // frag = document.createDocumentFragment();
-      ul = document.createElement("ul");
-      ul1 = document.createElement("ul");
-      span = document.createElement("span");
-      span.setAttribute("class", "branch-node");
-      span.appendChild(document.createTextNode("+"));
-      li.appendChild(span);
-      span = document.createElement("span");
-      span.setAttribute("class", "node");
-      span.appendChild(txt);
-      li.appendChild(span);
-      for(key in parent.children) {
-        (() => {
-          var tmpLi = document.createElement("li");
-          tmpLi.appendChild(renderBranch(parent.children[key], key));
-          ul1.appendChild(tmpLi);
-        })();
-      }
-      li.appendChild(ul1);
-      ul.appendChild(li);
-      li = document.createElement("li");
-      li.appendChild(ul);
-      return li;
-    } else {
-      span = document.createElement("span");
-      span.setAttribute("class", "node");
-      span.appendChild(txt);
-      return span;
-    }
-  };
-
-  // 通过循环 嵌套调用 renderBranch
-  var name = null;
-  for(name in data) {
-    topUl.appendChild(renderBranch(data[name], name));
-  }
-  tree.appendChild(topUl);
-
-  var nodes = document.getElementsByClassName("node");
-  [].map.call(nodes, (e) => {
-    e.addEventListener("mouseenter", (e) => {
-      var target = e.target;
-      var className = target.className;
-      var txt = document.createTextNode(" - Del");
-      var span = document.createElement("span");
-      span.setAttribute("class", "delete");
-      span.appendChild(txt);
-      if(className === "node") {
-        target.appendChild(span);
-      }
-    });
-  });
-  [].map.call(nodes, (e) => {
-    e.addEventListener("mouseleave", (e) => {
-      var target = e.target;
-      var className = target.className;
-      if (className === "node") {
-        target.removeChild(target.lastChild);
-      }
-    });
-  });
-
-  getHeight = (node) => {
-    var ul = node.nextSibling.nextSibling;
-    var height = window.getComputedStyle(ul, null).getPropertyValue("height");
-    ul.style.height = height;
-  };
-
-  ul = document.getElementsByClassName("branch-node");
-  var i;
-  for(i = 0; i < ul.length; i++) {
-    getHeight(ul[i]);
+// utli 提供 DOM 组件
+var util = {
+  get: function() {
+    var tag = [].shift.call(arguments);
+    var args = arguments;
+    var res = null;
+    
   }
 
 };
 
-treeRender(treeData);
 
-var heightStorage = {};
-toggleShrink = (target) => {
-  var name = target.nextSibling.textContent;
-  var ul = target.nextSibling.nextSibling;
-  var height = null;
-  var ulHeight = ul.style.height;
-  if(heightStorage[name] === undefined) {
-    heightStorage[name] = window.getComputedStyle(ul, null).getPropertyValue("height");
-  }
+// singleProxy 提供单个 DOM 组件的代理及惰性加载 
 
-  if(ulHeight === "0px") {
-    ul.style.height = heightStorage[name];
-  } else {
-    ul.style.height = "0px";
-  }
-};
+// render 负责渲染、初始化树的 DOM 信息
 
-deleteNode = (target) => {
-  var newTree = {};
-  var txt = target.parentNode.firstChild.textContent;
-  console.log("txt = " + txt);
-  var tmpNode = null;
-  delNode = (node) => {
-    if (txt === node)  {
-      node = null;
-    } else if (node.children) {
-      for(tmpNode in node.children) {
-        console.log("node = " + tmpNode);
-        delNode(tmpNode);
-      }
-    }
-  };
-  
-  var node;
-  for (node in treeData) {
-    console.log("node = " + node);
-    newTree.node = {};
-    delNode(node);
-  }
-  treeRender(treeData);
-};
+// events 负责存储所有事件, 以便 binder 调用
 
-// 事件代理
-document.body.addEventListener("click", (e) => {
-  var target = e.target;
-  var className = target.className;
-  switch(className) {
-    case "branch-node":
-      toggleShrink(target);
-      break;
-    case "update":
-      break;
-    case "delete":
-      deleteNode(target);
-      break;
-    default:
-      break;
-  }
-});
+// binder 负责给所有节点绑定、广播事件
+
+// updateData 负责删除数据节点、增加数据节点，并重新调用 render

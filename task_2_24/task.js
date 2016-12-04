@@ -82,9 +82,9 @@ TreeWalker.prototype.show = function(str){
       if (config.searching && txt === str) {
         aniQueue(() => {
           container.style.backgroundColor = "yellow";
+          container.style.color = "black";
         }, 0);
       }
-      console.log();
     }
   })(this, str);
 };

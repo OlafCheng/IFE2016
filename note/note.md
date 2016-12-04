@@ -522,4 +522,16 @@ tree.someMethod.call(tree, para);
 原生 js 里没有直接针对 class 属性的操作方法, addClass 与 removeClass 均来自 jQuery
 可以自己实现 `addClass` 与 `removeClass`
 
-##
+## 函数执行时, 内部的变量如何变化
+看下面的代码:
+```
+function a () {
+    var a;
+    if(a === undefined) {
+        console.log("a is not defined!");
+        a = 1;
+    }
+};
+a();
+a();
+```
