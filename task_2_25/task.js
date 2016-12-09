@@ -37,14 +37,23 @@ treeData = {
 };
 
 // utli 提供 DOM 组件
-var util = {
-  get: function() {
-    var tag = [].shift.call(arguments);
-    var args = arguments;
-    var res = null;
-    
-  }
+let util = {
+  get: (str) => {
+    let args = str.split(":");
+    return [].map.call(args, _createElement);
+  },
+  _createElement: () => {
+    let args = arguments.split("-");
+    let txt;
+    if (args.length > 1) {
+      txt = document.createTextNode(args.splice(-1, 1));
+    }
+    let ele = document.createElement(args[0]);
+    return txt ? ele.appendChild(txt) : ele;
+  },
+  _getpop: () => {
 
+  }
 };
 
 
