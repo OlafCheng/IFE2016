@@ -181,7 +181,7 @@ var mediator = (() => {
             fn.call(obj);
         }
       }
-    }, 1000);
+    }, config.timer);
   };
 
   let addPlayer = (id) => {
