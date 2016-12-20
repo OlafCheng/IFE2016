@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+  <head>
+    <title>飞船游戏</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <p style="font-size:12px; padding: 0.1rem; margin: 0;">实际上飞船绕地球运动并不需要能量呀 >_< 所以哪里有能耗这一说呢？对于程序的解释在 note.md</p>
+    <canvas id="cosmos" width="500" height="500"></canvas>
+    <form action="index.html">
+      <span>飞船引擎:&nbsp;</span>
+      <input id="ss-engine-0" type="radio" name="ss-engine" value="0" checked>
+      <label for="ss-engine-0">最慢(高空轨道), 能耗 5%/s</label>
+      <input id="ss-engine-1" type="radio" name="ss-engine" value="1">
+      <label for="ss-engine-1">中等(中层轨道), 能耗 7%/s</label>
+      <input id="ss-engine-2" type="radio" name="ss-engine" value="2">
+      <label for="ss-engine-2">最快(低空轨道), 能耗 9%/s</label>
+      <br>
+      <span>飞船能源系统:&nbsp;</span>
+      <input id="ss-power-0" type="radio" name="ss-power" value="0">
+      <label for="ss-power-0">原始: 2%/s</label>
+      <input id="ss-power-1" type="radio" name="ss-power" value="1">
+      <label for="ss-power-1">增强: 3%/s</label>
+      <input id="ss-power-2" type="radio" name="ss-power" value="2" checked>
+      <label for="ss-power-2">极限: 4%/s</label>
+      <br>
+      <button id="button" type="button" data-command="add">新的飞船起飞！</button>
+    </form>
+    <div id="commandPanel">
+    </div>
+  </body>
+  <script src="task.js"></script>
+</html>
