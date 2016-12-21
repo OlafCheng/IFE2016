@@ -187,14 +187,20 @@ let BUS = (() => {
     _nameSpace[NS].forEach(fn => fn());
   };
 
-  let _remove = ({NS}) => {
-    // 保留
+  let _broadcast = ({receiver, msg}) => {
+    setTimeout(() => {
+      if (Math.random() > 0.1) {
+        receiver.receiver(msg);
+      } else {
+        _broadcast(args);
+      }
+    }, config.delay);
   };
 
   return {
     listen: _listen,
     trigger: _trigger,
-    remove: _remove,
+    broadcast: _broadcast,
   };
 })();
 
@@ -211,6 +217,8 @@ let mediator = (() => {
     players = players.filter(obj => obj._token !== token);
   };
 
+  let _command = "";
+
   let receiver = ({args, command}) => {
     if (command === "addPlayer") {
       addPlayer(args);
@@ -225,25 +233,22 @@ let mediator = (() => {
         1: "0001",
         2: "0010",
         3: "0011"
-      }[+args];// +args === parseInt(args)
-      // 改变 BUS 的功能, 将 BUS 从一种介质, 换为广播站
-      // players.forEach(e => BUS.broadCast({
-      //   fn: e.receiver,
-      //   arg: binaryId + binaryCommand,
-      //   token: "mediator"
-      // }));
-      // players.forEach((e) => {
-
-      // });
+      }[+args];
+      let _command = binaryId + binaryCommand;
+      // 触发函数
+      BUS.trigger({NS: "mediator"});
     }
   };
 
-  // BUS.listen("mediator", () => {
-  //   players = players.filter(e => {})
-  // });
+  // 添加要监听到事件的时候要执行的函数
+  BUS.listen({NS: "mediator", fn: () =>  {
+    players.forEach(player => BUS.broadcast({receiver: player, msg: mediator.command}));
+  }});
+
 
   return {
-    receiver: receiver
+    receiver: receiver,
+    command: _command
   };
 })();
 
