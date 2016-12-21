@@ -72,3 +72,12 @@ every time when mediator received any command, it will be execute on every eleme
 > DC 本身是一个观察者, 提供监听功能, 一旦数据得到更新, 就调用第 6 点的 DOM 渲染函数, 对 DOM 节点进行重新渲染
 为了避免 repainting 整个页面, 将大屏幕固定在右侧, 不参与整个页面的布局
 6. 基于装饰者模式实现一个 DOM 渲染函数, 负责渲染大屏幕(数据源来自 DC)
+
+`Player` 的 `feedback()` 方法:
+1. 当 `_updateState()` 方法被调用时, 这个方法也被调用, 用于给 `DC` (数据中心) 传递最新的自己的状态信息, 便于数据中心更新大屏幕上显示的信息
+2. 当 `_die()` 方法被调用时, 这个方法也被调用, 给 `DC` 传递销毁这个飞船在数据中心的数据(对象)
+
+`DC` 的 ｀playerData｀ 属性:
+用于给大屏幕提供用于显示飞船状态的信息
+`DC` 的 `receiver()` 方法:
+用于接收来自 `mediator` 的信息(源自每一个 `player`), 根据数据来决定对对象的处理方式

@@ -4,6 +4,60 @@ let config = {
 };
 let players = [];
 
+let DC = (() => {
+  let _players = {};
+
+  let _playerData = {};
+
+  let _adapter = (str) => {
+    let _playerID = str.substr(0, 4);
+    let _playerState = str.substr(4, 4);
+    let _playerDuration = str.substr(8, 8);
+
+    let playerID = parseInt(_playerID, 2);
+    let playerState = {
+      "0000": "fly",
+      "0001": "stop",
+      "0010": "died"
+    }[_playerState];
+    let playerDuration = parseInt(_playerDuration, 2);
+
+    if (_playerData[playerID]) {
+      // 如果这个对象已经存在于 DC 中, 则只根据状态, 进行 DC 中 _players 的更新
+      switch(playerState) {
+        case "fly":
+          break;
+        case "stop":
+          break;
+        case "die":
+          break;
+      }
+    } else {
+      // 这个对象不存在, 需要塞进去
+      Object.defineProperty(_players, playerID, {
+        set: ({id: playerID, state: playerState, duration: playerDuration}) => {
+          this.id = id;
+          this.state = state;
+          this.duration = duration;
+          // TODO
+        }, 
+        get: () => {
+          return this;
+        }
+      });
+    }
+  };
+
+  let _receiver = (msg) => {
+    _adapter(msg);
+  };
+
+  return {
+    receiver: _receiver,
+    playerData: _playerData
+  };
+})();
+
 // eventClear 是事件的中介者(用发布－订阅模式实现)
 // 负责清洗 DOM 事件, 把 DOM 事件的命令发送给 commander,
 // 然后 commander 负责对命令格式进行整理, 通过 mediator 管理 players
@@ -66,7 +120,7 @@ var commander = (() => {
     if(typeof token === "number") {
       let obj = args.shift();
       obj.id = token;
-      mediator.receiver({args: obj, command: "addPlayer"});
+      mediator.commandCenter({args: obj, command: "addPlayer"});
     } else {
       return false;
     }
@@ -76,9 +130,9 @@ var commander = (() => {
     if(command === "remove") {
       leftToken.push(+args);
       console.log("left token = " + leftToken.join());
-      mediator.receiver({args: args, command: "remove"});
+      mediator.commandCenter({args: args, command: "remove"});
     } else {
-      mediator.receiver({args: args, command: command});
+      mediator.commandCenter({args: args, command: command});
     }
   };
 
@@ -187,6 +241,8 @@ let BUS = (() => {
     _nameSpace[NS].forEach(fn => fn());
   };
 
+  // 因为 _broadcast 在每次运行的时候会产生新的作用域链, 
+  // 所以删除 _nameSpace 不会影响到信号的失败重发
   let _broadcast = ({receiver, msg}) => {
     setTimeout(() => {
       if (Math.random() > 0.1) {
@@ -197,9 +253,14 @@ let BUS = (() => {
     }, config.delay);
   };
 
+  let _remove = (fn) => {
+    delete _nameSpace[fn];
+  };
+
   return {
     listen: _listen,
     trigger: _trigger,
+    remove: _remove,
     broadcast: _broadcast,
   };
 })();
@@ -208,20 +269,21 @@ let BUS = (() => {
 // 和要求的不一样, 这里把 mediator 改为了原本的用途 —— 中介者, 而介质的部分, 由 space 实现
 let mediator = (() => {
 
-  let addPlayer = (args) => {
+  let _addPlayer = (args) => {
     // 发射是在星球上有人工监督的, 所以不经过 BUS
     players.push(new Player(args));
   };
 
-  let removePlayer = (token) => {
+  let _removePlayer = (token) => {
     players = players.filter(obj => obj._token !== token);
   };
 
+  // 用于存储每一次指挥官下达的命令的二进制格式的字符串
   let _command = "";
 
-  let receiver = ({args, command}) => {
+  let _commandCenter = ({args, command}) => {
     if (command === "addPlayer") {
-      addPlayer(args);
+      _addPlayer(args);
     } else {
       let binaryCommand = {
         fly: "0000",
@@ -240,15 +302,19 @@ let mediator = (() => {
     }
   };
 
+  _receiver = (msg) => {
+    DC.receiver(msg);
+  };
+
   // 添加要监听到事件的时候要执行的函数
   BUS.listen({NS: "mediator", fn: () =>  {
     players.forEach(player => BUS.broadcast({receiver: player, msg: mediator.command}));
   }});
 
-
   return {
-    receiver: receiver,
-    command: _command
+    commandCenter: _commandCenter,
+    command: _command,
+    receiver: _receiver
   };
 })();
 
@@ -293,6 +359,7 @@ class Player {
             that._state = "stop";
           }
       }
+      that.feedback();
       // console.log("spaceship id = " + that.id + " with duration " + that._duration);
       try {
         that._updateState();
@@ -321,6 +388,8 @@ class Player {
 
   die() {
     if (typeof this._duration === "function") {
+      this._state = "died";
+      this.feedback();
       this._updateState = null;
       console.log("spaceship " + this.id + " died!");
     }
@@ -355,6 +424,26 @@ class Player {
       }[parseInt(commandBinary.slice(-4), 2)];
       command.call(that);
     }
+  }
+
+  feedback() {
+    let getBinary = (num, l) => {
+      return Array(l - (num).toString(2).length).fill(0).join("") + (num).toString(2);
+    };
+    let binaryId = getBinary(this.id, 4);
+    let binaryCommand = {
+      fly: "0000",
+      stop: "0001",
+      died: "0010"
+    }[this._state];
+    let binaryDuration = getBinary(this._duration, 8);
+    mediator.receiver(binaryId + binaryCommand + binaryDuration);
+    let newCommand = binaryId + binaryCommand + binaryDuration;
+    BUS.listen({NS: "player-send", fn: () => {
+      BUS.broadcast({receiver: mediator.receiver, msg: newCommand});
+    }});
+    BUS.trigger({NS: "player-send"});
+    BUS.remove({NS: "player-send"});
   }
 
   receiver(command) {
