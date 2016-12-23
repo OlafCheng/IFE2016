@@ -4,10 +4,54 @@
     <title>飞船游戏</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      canvas {
+        display: inline-block;
+      }
+      table {
+        position: relative;
+        vertical-align: top;
+        display: inline-block;
+        border: 1px solid black;
+        text-align: center;
+        line-height: 2rem;
+      }
+      table th {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+      thead{
+        background-color: #666666;
+        color: white;
+      }
+    </style>
   </head>
   <body>
     <p style="font-size:12px; padding: 0.1rem; margin: 0;">实际上飞船绕地球运动并不需要能量呀 >_< 所以哪里有能耗这一说呢？对于程序的解释在 note.md</p>
     <canvas id="cosmos" width="500" height="500"></canvas>
+    <table>
+      <thead>
+        <tr>
+          <th>
+           飞船
+          </th>
+          <th>
+           飞行状态
+          </th>
+          <th>
+           剩余能量
+          </th>
+          <th>
+           动力系统
+          </th>
+          <th>
+           能源系统
+          </th>
+        </tr>
+      </thead>
+      <tbody id="rootDOM">
+      </tbody>
+    </table>
     <form action="index.html">
       <span>飞船引擎:&nbsp;</span>
       <input id="ss-engine-0" type="radio" name="ss-engine" value="0" checked>

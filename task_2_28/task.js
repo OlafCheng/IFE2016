@@ -4,15 +4,76 @@ let config = {
 };
 let players = [];
 
+let player_config = {
+  cost: {
+    5: "最慢(高空轨道)",
+    7: "中等(中层轨道)",
+    9: "最快(低空轨道)"
+  },
+  recover: {
+    2: "原始(2%)",
+    3: "增强(3%)",
+    4: "极限(4%)"
+  }
+};
+
+let renderScreen = () => {
+  let data = DC.playerData;
+  let rootDOM = document.getElementById("rootDOM");
+  let frag = document.createDocumentFragment();
+  while(rootDOM.firstChild) {
+    rootDOM.removeChild(rootDOM.firstChild);
+  }
+  for(let key in data) {
+    let single_player_data = data[key];
+    let tr = document.createElement("tr");
+    for (let item in single_player_data) {
+      let td = document.createElement("td");
+      let str;
+      switch (item) {
+        case "cost":
+        case "recover":
+          str = player_config[item][single_player_data[item]];
+          break;
+        default:
+          str = single_player_data[item];
+      }
+      let txt = document.createTextNode(str);
+      td.appendChild(txt);
+      tr.appendChild(td);
+    }
+    frag.appendChild(tr);
+  }
+  rootDOM.appendChild(frag);
+};
+
 let DC = (() => {
-  let _players = {};
+  let _players = {};// 用于保存飞船的 set get 劫持
 
-  let _playerData = {};
+  let checkEqual = ({id, state, duration, cost, recover}) => {
+    if(
+        _playersValue[id] &&
+        _playersValue[id].state === state &&
+        _playersValue[id].duration === duration &&
+        _playersValue[id].cost === cost &&
+        _playersValue[id].recover === recover
+      ) {
+        return false;
+    } else {
+      return true;
+    }
+  };
 
-  let _adapter = (str) => {
+  let _playersValue = {};// 用于保存飞船的实际数据
+  console.log(_playersValue);
+
+  let _adapter = (str) => {// 适配器承担了原本不属于自己的工作
+
     let _playerID = str.substr(0, 4);
     let _playerState = str.substr(4, 4);
     let _playerDuration = str.substr(8, 8);
+    let _playerCost = str.substr(16, 4);
+    let _playerRecover = str.substr(20, 4);
 
     let playerID = parseInt(_playerID, 2);
     let playerState = {
@@ -21,32 +82,64 @@ let DC = (() => {
       "0010": "died"
     }[_playerState];
     let playerDuration = parseInt(_playerDuration, 2);
+    let playerCost = parseInt(_playerCost, 2);
+    let playerRecover = parseInt(_playerRecover, 2);
+    let ifRender = checkEqual({
+      id: playerID,
+      state: playerState,
+      duration: playerDuration,
+      cost: playerCost,
+      recover: playerRecover
+    });
 
-    if (_playerData[playerID]) {
-      // 如果这个对象已经存在于 DC 中, 则只根据状态, 进行 DC 中 _players 的更新
-      switch(playerState) {
-        case "fly":
-          break;
-        case "stop":
-          break;
-        case "die":
-          break;
-      }
-    } else {
-      // 这个对象不存在, 需要塞进去
-      Object.defineProperty(_players, playerID, {
-        set: ({id: playerID, state: playerState, duration: playerDuration}) => {
-          this.id = id;
-          this.state = state;
-          this.duration = duration;
-          // TODO
-        }, 
-        get: () => {
-          return this;
+    if (ifRender) {
+      if (_players[playerID]) {
+        // 如果这个对象已经存在于 DC 中, 则只根据状态, 进行 DC 中 _players 的更新
+        if (playerState !== "died") {
+          _players[playerID] = {
+            id: playerID,
+            state: playerState,
+            duration: playerDuration,
+            cost: playerCost,
+            recover: playerRecover
+          };
+        } else {
+          delete _players[playerID];
+          delete _playersValue[playerID];
+          renderScreen();
         }
-      });
+      } else if (playerState !== "died") {
+        // 这个对象不存在, 需要塞进去
+        Object.defineProperty(_players, playerID, {
+          configurable: true,
+          enumerable: true,
+          set: ({id, state, duration, cost, recover}) => {
+            _playersValue[playerID].id = id;
+            _playersValue[playerID].state = state;
+            _playersValue[playerID].duration = duration;
+            _playersValue[playerID].cost = cost;
+            _playersValue[playerID].recover = recover;
+            renderScreen();
+          }, 
+          get: () => {
+            return _playersValue[playerID];
+          }
+        });
+        _playersValue[playerID] = {
+          id: playerID,
+          state: playerState,
+          duration: playerDuration,
+          cost: playerCost,
+          recover: playerRecover
+        };
+        renderScreen();
+        console.log(_playersValue);
+      }
     }
+
   };
+
+
 
   let _receiver = (msg) => {
     _adapter(msg);
@@ -54,7 +147,7 @@ let DC = (() => {
 
   return {
     receiver: _receiver,
-    playerData: _playerData
+    playerData: _playersValue
   };
 })();
 
@@ -234,27 +327,36 @@ let BUS = (() => {
   };
 
   let _listen = ({NS, fn}) => {
-    _nameSpace[NS].push(fn);
+    if (_nameSpace[NS]) {
+      _nameSpace[NS].push(fn);
+    } else {
+      _nameSpace[NS] = [fn];
+    }
   };
 
-  let _trigger = ({NS}) => {
+  let _trigger = (...args) => {
+    let NS = args.shift().NS;
     _nameSpace[NS].forEach(fn => fn());
   };
 
   // 因为 _broadcast 在每次运行的时候会产生新的作用域链, 
   // 所以删除 _nameSpace 不会影响到信号的失败重发
   let _broadcast = ({receiver, msg}) => {
+    console.log("msg = " + msg);
+    if (typeof msg === "function") {
+      msg = msg();// 尽快的获取需要更新才能获得的最新的信息, 并且把这个值保存在一个作用域链上
+    }
     setTimeout(() => {
       if (Math.random() > 0.1) {
         receiver.receiver(msg);
       } else {
-        _broadcast(args);
+        _broadcast({receiver: receiver, msg: msg});
       }
     }, config.delay);
   };
 
-  let _remove = (fn) => {
-    delete _nameSpace[fn];
+  let _remove = ({NS}) => {
+    delete _nameSpace[NS];
   };
 
   return {
@@ -296,13 +398,26 @@ let mediator = (() => {
         2: "0010",
         3: "0011"
       }[+args];
-      let _command = binaryId + binaryCommand;
-      // 触发函数
+      _command = binaryId + binaryCommand;
+      // mediator 的状态得到更新, 通知它的监听者 —— player
       BUS.trigger({NS: "mediator"});
     }
   };
 
   _receiver = (msg) => {
+    // 对飞船发回的消息进行一次过滤
+    // 如果飞船需要被删除掉, 就调用 _removePlayer
+    let command = msg.substr(4, 4);
+    if (command === "0010") {
+      console.log("remove!!!");
+      let id = parseInt(msg.substr(0, 4), 2);
+      // command === "0010" -> 接受到的是飞船死亡的命令
+      players.forEach((obj) => {
+        if (obj.id === id) {
+          _removePlayer(obj._token);
+        }
+      });
+    }
     DC.receiver(msg);
   };
 
@@ -313,7 +428,9 @@ let mediator = (() => {
 
   return {
     commandCenter: _commandCenter,
-    command: _command,
+    command: () => {
+      return _command;
+    },
     receiver: _receiver
   };
 })();
@@ -375,7 +492,7 @@ class Player {
     if (that._state !== "fly") {
       that._state = "fly";
       that._refreshPosition();
-      // console.log("spaceship " + that.id + " fly.");
+      console.log("spaceship " + that.id + " fly.");
     }
   }
 
@@ -387,12 +504,10 @@ class Player {
   }
 
   die() {
-    if (typeof this._duration === "function") {
-      this._state = "died";
-      this.feedback();
-      this._updateState = null;
-      console.log("spaceship " + this.id + " died!");
-    }
+    this._state = "died";
+    this.feedback();
+    this._updateState = null;
+    console.log("spaceship " + this.id + " died!");
   }
 
   getCost(typeName) {
@@ -436,11 +551,15 @@ class Player {
       stop: "0001",
       died: "0010"
     }[this._state];
+    console.log("feed back");
+    let binaryRecover = getBinary(this._recover, 4);
+    let binaryCost = getBinary(this._cost, 4);
     let binaryDuration = getBinary(this._duration, 8);
-    mediator.receiver(binaryId + binaryCommand + binaryDuration);
-    let newCommand = binaryId + binaryCommand + binaryDuration;
+    let newCommand = binaryId + binaryCommand + binaryDuration + binaryCost + binaryRecover;
     BUS.listen({NS: "player-send", fn: () => {
-      BUS.broadcast({receiver: mediator.receiver, msg: newCommand});
+    // 通过 broadcast 将信息广播给 DC
+      BUS.broadcast({receiver: mediator, msg: newCommand});
+      console.log("send command = " + newCommand);
     }});
     BUS.trigger({NS: "player-send"});
     BUS.remove({NS: "player-send"});
