@@ -5,6 +5,10 @@ let config = {
 let players = [];
 
 let player_config = {
+  state: {
+    "fly": "飞行中",
+    "stop": "已停止"
+  },
   cost: {
     5: "最慢(高空轨道)",
     7: "中等(中层轨道)",
@@ -33,10 +37,14 @@ let renderScreen = () => {
       switch (item) {
         case "cost":
         case "recover":
+        case "state":
           str = player_config[item][single_player_data[item]];
           break;
+        case "duration":
+          str = single_player_data[item] + "%";
+          break;
         default:
-          str = single_player_data[item];
+          str = single_player_data[item] + "号";
       }
       let txt = document.createTextNode(str);
       td.appendChild(txt);
