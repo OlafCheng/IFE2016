@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>task-2-29</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      .red {
+        color: red;
+      }
+      .gray {
+        color: gray;
+      }
+      .green {
+        color: green;
+      }
+      .redBorder {
+        border-color: red;
+      }
+      .greenBorder {
+        border-color: green;
+      }
+      .grayBorder {
+        border-color: gray;
+      }
+    </style>
+  </head>
+  <body>
+    <label for="string">名称</label><input type="text" name="string" id="string" value="" /><button id="check" type="button">验证</button>
+    <p id="wraning_msg" class="gray">字符串长度为 4~16</p>
+  </body>
+  <script>
+    let button = document.getElementById("check")
+    let input = document.getElementById("string")
+    let p = document.getElementById("wraning_msg")
+
+    let warning_msg = {
+      "right": "名称格式正确",
+      "default": "字符串长度为 4~16",
+      "wrong": "名称格式不正确, 请重新检查是否为 4~16 个字符！",
+      "none": "请输入字符！"
+    }
+
+    let calculateLength = (str) => {
+      let i = 0;
+      let l = 0;
+      while (i < str.length) {
+        let code = str.charCodeAt(i++);
+        l += code < 128 && code > -1 ? 1 : 2;
+      }
+      return l
+    }
+
+    button.addEventListener("click", () => {
+      
+    })
+
+    let Event = {
+      check: () => {
+        let insertTxt = (s) => {
+          p.textContent = s
+        }
+        let l = calculateLength(input.value);
+        if (l === 0) {
+          insertTxt(warning_msg["none"])
+          p.className = "red"
+          input.className = "redBorder";
+        } else if (l < 4 || l > 16) {
+          insertTxt(warning_msg["wrong"])
+          p.className = "red"
+          input.className = "redBorder"
+        } else {
+          insertTxt(warning_msg["right"])
+          p.className = "green"
+          input.className = "greenBorder";
+        }
+      }
+    }
+
+    let init = (() => {
+      document.body.addEventListener("click", (e) => {
+        if (e.target.id && Event[e.target.id]) {
+          Event[e.target.id]()
+        }
+      })
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          button.click()
+        }
+      })
+    })()
+  </script>
+</html>
