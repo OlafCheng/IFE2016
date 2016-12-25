@@ -89,3 +89,4 @@ every time when mediator received any command, it will be execute on every eleme
 1. 适配器, 进行功能的分离和抽取
 2. 适配器中的编码转换, 在全局定义一个通用的变量, 或者挂在 `Player` 上, 从原型中提取编码
 3. 随着任务 26-28 的进行, 代码的耦合度变得很大, 有些地方可以重新编写, 降低耦合度
+4. 可以用精灵兔代替实时绘制出来的飞船形状，能够提升性能

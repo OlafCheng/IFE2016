@@ -1,3 +1,4 @@
+// 保留 console.log 代码段是方便调试
 let config = {
   timer: 1000,// 延迟 ms
   delay: 300
@@ -73,7 +74,7 @@ let DC = (() => {
   };
 
   let _playersValue = {};// 用于保存飞船的实际数据
-  console.log(_playersValue);
+  // console.log(_playersValue);
 
   let _adapter = (str) => {// 适配器承担了原本不属于自己的工作
 
@@ -141,7 +142,7 @@ let DC = (() => {
           recover: playerRecover
         };
         renderScreen();
-        console.log(_playersValue);
+        // console.log(_playersValue);
       }
     }
 
@@ -179,8 +180,8 @@ let eventClear = (() => {
       switch(command) {
         case "add":
           commander.deploy({args: {id: id, power: +power, orbit: +orbit}, command: command});
-          console.log("orbit = " + orbit);
-          console.log("power = " + power);
+          // console.log("orbit = " + orbit);
+          // console.log("power = " + power);
           break;
         case "remove":
         case "fly":
@@ -230,7 +231,7 @@ var commander = (() => {
   let sendCommand = ({args, command}) => {
     if(command === "remove") {
       leftToken.push(+args);
-      console.log("left token = " + leftToken.join());
+      // console.log("left token = " + leftToken.join());
       mediator.commandCenter({args: args, command: "remove"});
     } else {
       mediator.commandCenter({args: args, command: command});
@@ -350,7 +351,7 @@ let BUS = (() => {
   // 因为 _broadcast 在每次运行的时候会产生新的作用域链, 
   // 所以删除 _nameSpace 不会影响到信号的失败重发
   let _broadcast = ({receiver, msg}) => {
-    console.log("msg = " + msg);
+    // console.log("msg = " + msg);
     if (typeof msg === "function") {
       msg = msg();// 尽快的获取需要更新才能获得的最新的信息, 并且把这个值保存在一个作用域链上
     }
@@ -417,7 +418,7 @@ let mediator = (() => {
     // 如果飞船需要被删除掉, 就调用 _removePlayer
     let command = msg.substr(4, 4);
     if (command === "0010") {
-      console.log("remove!!!");
+      // console.log("remove!!!");
       let id = parseInt(msg.substr(0, 4), 2);
       // command === "0010" -> 接受到的是飞船死亡的命令
       players.forEach((obj) => {
@@ -489,8 +490,8 @@ class Player {
       try {
         that._updateState();
       } catch (e) {
-        console.log(e);
-        console.log("Space ship[" + that.id + "] removed.");
+        // console.log(e);
+        // console.log("Space ship[" + that.id + "] removed.");
       }
     }, config.timer);
   }
@@ -500,14 +501,16 @@ class Player {
     if (that._state !== "fly") {
       that._state = "fly";
       that._refreshPosition();
-      console.log("spaceship " + that.id + " fly.");
+      that.feedback();
+      // console.log("spaceship " + that.id + " fly.");
     }
   }
 
   stop() {
     if (this._state !== "stop") {
       this._state = "stop";
-      console.log("spaceship " + this.id + " stop.");
+      this.feedback();
+      // console.log("spaceship " + this.id + " stop.");
     }
   }
 
@@ -515,7 +518,7 @@ class Player {
     this._state = "died";
     this.feedback();
     this._updateState = null;
-    console.log("spaceship " + this.id + " died!");
+    // console.log("spaceship " + this.id + " died!");
   }
 
   getCost(typeName) {
@@ -559,7 +562,7 @@ class Player {
       stop: "0001",
       died: "0010"
     }[this._state];
-    console.log("feed back");
+    // console.log("feed back");
     let binaryRecover = getBinary(this._recover, 4);
     let binaryCost = getBinary(this._cost, 4);
     let binaryDuration = getBinary(this._duration, 8);
@@ -567,7 +570,7 @@ class Player {
     BUS.listen({NS: "player-send", fn: () => {
     // 通过 broadcast 将信息广播给 DC
       BUS.broadcast({receiver: mediator, msg: newCommand});
-      console.log("send command = " + newCommand);
+      // console.log("send command = " + newCommand);
     }});
     BUS.trigger({NS: "player-send"});
     BUS.remove({NS: "player-send"});
