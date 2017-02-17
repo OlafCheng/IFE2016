@@ -77,6 +77,10 @@ ul li {
   cursor: pointer;
 }
 
+nav {
+  display: inline;
+}
+
 nav > ul {
   float: right;
   padding-right: 3.90625%;

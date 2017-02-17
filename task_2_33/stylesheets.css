@@ -1,0 +1,35 @@
+#square {
+  overflow: hidden;
+  display: block;
+  flex-flow: row wrap;
+  align-items: space-between;
+  width: 319px;
+  height: 319px;
+  background-color: #CCC;
+  border: 1px solid black;
+}
+#square > div {
+  width: 31px;
+  height: 31px;
+  background-color: white;
+  float: left;
+}
+#square > div {
+  margin-right: 1px;
+  margin-bottom: 1px;
+}
+#square > div:nth-child(10n) {
+  margin-right: 0;
+}
+#square > div:nth-last-child(-n + 10) {
+  margin-bottom: 0;
+}
+#square > div:last-child {
+  margin-right: 0;
+}
+#target {
+  width: 31px;
+  height: 23px;
+  border-top: 8px solid blue;
+  background-color: red;
+}
